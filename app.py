@@ -18,7 +18,7 @@ def sendStatic(path):
 
 @app.route('/')
 def index():
-    return redirect('/index.html')
+    return redirect('index')
 
 
 if __name__ == "__main__":
