@@ -15,7 +15,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn text disabled>
+      <v-btn text @click="overlay = true">
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
@@ -42,6 +42,18 @@
         <v-tab-item v-if="typeof selectedProject === 'string'"> Отчеты (пока не готово) </v-tab-item>
       </v-tabs-items>
     </v-main>
+
+    <v-overlay
+      :opacity=0.9
+      :value="overlay"
+    >
+      <v-btn
+        color="orange lighten-2"
+        @click="overlay = false"
+      >
+        Hide Overlay
+      </v-btn>
+    </v-overlay>
   </v-app>
 </template>
 
@@ -70,7 +82,9 @@ export default {
     apiData: fetchedData,
 
     selectedProject: null,
-    selectedDate: null
+    selectedDate: null,
+
+    overlay: false
   }),
 
   methods: {
