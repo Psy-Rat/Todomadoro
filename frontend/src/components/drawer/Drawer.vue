@@ -83,6 +83,14 @@ export default {
         this.$emit('selectedProject', this.selectedProject)
       }
     },
+    timeGroup: function (val) {
+      if (val == undefined)  {
+        this.$emit('selectedTimeGroup', null)
+      }
+      else {
+        this.$emit('selectedTimeGroup', this.timeGroup)
+      }
+    },
   }
 };
 </script>

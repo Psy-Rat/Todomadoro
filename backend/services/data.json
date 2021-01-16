@@ -40,19 +40,24 @@
             "id": "w54",
             "projectId": "root",
             "desription": "test global task 3",
-            "completed": false
+            "completed": false,
+            "date": 1610744400000
         },
         {
             "id": "g45",
             "projectId": "root",
             "desription": "test global task 4",
-            "completed": true
+            "completed": true,
+            "date": 1610917200000,
+            "isWeekly": true
         },
         {
             "id": "123",
             "projectId": "qwe123",
             "desription": "test task 1",
-            "completed": false
+            "completed": false,
+            "date": 1610917200000,
+            "isWeekly": true
         },
         {
             "id": "456",
@@ -64,7 +69,8 @@
             "id": "45608",
             "projectId": "qwe123",
             "desription": "test task 5",
-            "completed": true
+            "completed": true,
+            "date": 1610817979196
         }
     ],
     "notes": [

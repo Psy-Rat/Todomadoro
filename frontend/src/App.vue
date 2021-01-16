@@ -4,6 +4,7 @@
       <Drawer 
         :projects="projects" 
         @selectedProject="setSelectedProject"
+        @selectedTimeGroup="setTimeGroup"
       />
     </v-navigation-drawer>
 
@@ -62,7 +63,8 @@ export default {
     tab: 0,
     apiData: fetchedData,
 
-    selectedProject: null
+    selectedProject: null,
+    selectedDate: null
   }),
 
   methods: {
@@ -76,8 +78,10 @@ export default {
       }
     },
     setSelectedProject(projectId) {
-      console.log(projectId)
       this.selectedProject = projectId
+    },
+    setTimeGroup(timeGroup) {
+      this.selectedDate = timeGroup
     }
   },
 
@@ -91,19 +95,54 @@ export default {
       return this.apiData.projects;
     },
     todos() {
-      if (this.selectedProject === null)
-        return this.apiData.tasks;
+      let filteredProjects = []    
       
-      if (this.selectedProject === false)
-        return this.apiData.tasks.filter((task) => task.projectId === this.apiData.id)
+      if (this.selectedProject === false) {
+        filteredProjects = this.apiData.tasks.filter((task) => task.projectId === this.apiData.id)
+      } else if (typeof this.selectedProject === "string") {
+        filteredProjects = this.apiData.tasks.filter((task) => task.projectId === this.selectedProject)
+      } else {
+        filteredProjects = this.apiData.tasks;
+      }
+
+      let d = new Date();
+      // let today = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+      let tomorow = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime();
+      let day2 = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 2).getTime();
+
+      d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+      let nextMonday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7).getTime()
       
-      return this.apiData.tasks.filter((task) => task.projectId === this.selectedProject)
+      switch(this.selectedDate) {
+        case 0:
+          filteredProjects = filteredProjects.filter((task) => task.date <= tomorow)
+          break;
+        case 1:
+          filteredProjects = filteredProjects.filter((task) => task.date >= tomorow && task.date <= day2)
+          break;
+        case 2:
+          filteredProjects = filteredProjects.filter((task) => task.isWeekly && task.date <= nextMonday)
+          break;
+        case 3:
+          filteredProjects = filteredProjects.filter((task) => task.date == undefined)
+          break;
+      }
+
+
+      return filteredProjects
+    },
+    tomorow() {
+      var d = new Date();
+      d.setDate(d.getDate() + 1);
+      var tomorow = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      return tomorow
+
     },
     sunday() {
       var d = new Date();
 
-      // set to Monday of this week
-      d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+      // set to prev Monday
+      d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 7);
 
       // set to next Monday
       d.setDate(d.getDate() + 7);
