@@ -1,34 +1,25 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-navigation-drawer 
+      app
+      v-model="drawer"
+      absolute
+      temporary
+    >
+      <Drawer :projects="projects"/>
+    </v-navigation-drawer>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+    <v-app-bar app color="primary" dark>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title><b>ToDo</b>modoro</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
         text
+        disabled
       >
-        <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
@@ -40,15 +31,44 @@
 </template>
 
 <script>
+import fetchedData from '../../backend/services/data.json'
+import Drawer from './components/drawer/Drawer.vue'
 
 export default {
   name: "App",
 
   components: {
+    Drawer
   },
 
   data: () => ({
-    //
-  })
+    drawer: false,
+    timeGroup: 0,
+    projectGroup: 0,
+    apiData: fetchedData,
+  }),
+
+  methods: {
+    async apiGetHello(url) {
+      let response = await fetch(url);
+
+      if (response.ok) {
+          this.apiData = await response.json();
+      } else {
+          console.error("Ошибка HTTP: " + response.status);
+      }
+    },
+  },
+
+  // created() {
+  //   let url = window.location.origin + '/api/fake/me'
+  //   this.apiGetHello(url)
+  // },
+
+  computed: {
+    projects() {
+      return this.apiData.projects
+    }
+  }
 };
 </script>
