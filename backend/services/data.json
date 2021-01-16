@@ -56,8 +56,7 @@
             "projectId": "qwe123",
             "desription": "test task 1",
             "completed": false,
-            "date": 1610917200000,
-            "isWeekly": true
+            "date": 1610917200000
         },
         {
             "id": "456",

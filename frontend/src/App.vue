@@ -24,7 +24,7 @@
       <!-- <Breadcrumbs /> -->
       <v-tabs v-model="tab" center-active show-arrows grow>
         <v-tab>Задачи</v-tab>
-        <v-tab>Заметки</v-tab>
+        <v-tab v-if="typeof selectedProject === 'string' || typeof selectedProject === 'boolean'">Заметки</v-tab>
         <v-tab v-if="typeof selectedProject === 'string'">Этапы</v-tab>
         <v-tab v-if="typeof selectedProject === 'string'">Отчеты</v-tab>
       </v-tabs>
@@ -33,13 +33,13 @@
         <v-tab-item> 
           <TodoList :todos="todos" />
         </v-tab-item>
-        <v-tab-item> 
+        <v-tab-item v-if="typeof selectedProject === 'string' || typeof selectedProject === 'boolean'"> 
           <NoteList :notes="notes" />
         </v-tab-item>
         <v-tab-item v-if="typeof selectedProject === 'string'"> 
           <MilestoneList :milestones="milestones" /> 
         </v-tab-item>
-        <v-tab-item v-if="typeof selectedProject === 'string'"> Отчеты </v-tab-item>
+        <v-tab-item v-if="typeof selectedProject === 'string'"> Отчеты (пока не готово) </v-tab-item>
       </v-tabs-items>
     </v-main>
   </v-app>
