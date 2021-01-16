@@ -27,7 +27,7 @@ export default {
     },
   },
   created() {
-    let url = window.location.origin + '/api/hello/Ivan'
+    let url = window.location.origin + '/api/fake/me'
     this.apiGetHello(url)
   }
 };

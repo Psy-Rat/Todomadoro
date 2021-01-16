@@ -1,0 +1,67 @@
+{
+  "id": "qwe",
+  "name": "root",
+  "projects": [
+      {
+          "name": "Test project 1",
+          "id": "qwe123",
+          "projects": [],
+          "tasks": [
+              {
+                  "id": "123", 
+                  "desription": "test task 1", 
+                  "completed": false
+              },
+              {
+                  "id": "456", 
+                  "desription": "test task 2", 
+                  "completed": true
+              }
+          ],
+          "milestones": [
+              {
+                  "id": "ve45", 
+                  "desription": "test milestone 1", 
+                  "completed": true
+              },
+              {
+                  "id": "h9k", 
+                  "desription": "test milestone 2", 
+                  "completed": false
+              }
+          ],
+          "notes": [
+              {
+                  "id": "xcm", 
+                  "text": "test milestone 1"
+              },
+              {
+                  "id": "huil", 
+                  "text": "test milestone 2"
+              }
+          ]
+      }
+  ],
+  "tasks": [
+      {
+          "id": "w54", 
+          "desription": "test global task 3", 
+          "completed": false
+      },
+      {
+          "id": "g45", 
+          "desription": "test global task 4", 
+          "completed": true
+      }
+  ],
+  "notes": [
+      {
+          "id": "h78", 
+          "text": "test global note 3"
+      },
+      {
+          "id": "9yu6", 
+          "text": "test global note 4"
+      }
+  ]
+}
