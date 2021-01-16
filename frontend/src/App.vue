@@ -21,21 +21,25 @@
     </v-app-bar>
 
     <v-main>
-      <Breadcrumbs />
-      <v-tabs v-model="tab" center-active show-arrows>
+      <!-- <Breadcrumbs /> -->
+      <v-tabs v-model="tab" center-active show-arrows grow>
         <v-tab>Задачи</v-tab>
-        <v-tab>Этапы</v-tab>
         <v-tab>Заметки</v-tab>
-        <v-tab>Отчеты</v-tab>
+        <v-tab v-if="typeof selectedProject === 'string'">Этапы</v-tab>
+        <v-tab v-if="typeof selectedProject === 'string'">Отчеты</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
-        <v-tab-item>
+        <v-tab-item> 
           <TodoList :todos="todos" />
         </v-tab-item>
-        <v-tab-item> Этапы </v-tab-item>
-        <v-tab-item> Заметки </v-tab-item>
-        <v-tab-item> Отчеты </v-tab-item>
+        <v-tab-item> 
+          <NoteList :notes="notes" />
+        </v-tab-item>
+        <v-tab-item v-if="typeof selectedProject === 'string'"> 
+          <MilestoneList :milestones="milestones" /> 
+        </v-tab-item>
+        <v-tab-item v-if="typeof selectedProject === 'string'"> Отчеты </v-tab-item>
       </v-tabs-items>
     </v-main>
   </v-app>
@@ -45,7 +49,8 @@
 import fetchedData from "../../backend/services/data.json";
 import Drawer from "./components/drawer/Drawer.vue";
 import TodoList from "@/components/TodoList.vue";
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import MilestoneList from '@/components/tabs/MilestonesList.vue'
+import NoteList from '@/components/tabs/NoteList.vue'
 
 export default {
   name: "App",
@@ -53,7 +58,8 @@ export default {
   components: {
     Drawer,
     TodoList,
-    Breadcrumbs,
+    MilestoneList,
+    NoteList
   },
 
   data: () => ({
@@ -78,6 +84,10 @@ export default {
       }
     },
     setSelectedProject(projectId) {
+      if (this.tab > 1) {
+        this.tab = 0
+      }
+      
       this.selectedProject = projectId
     },
     setTimeGroup(timeGroup) {
@@ -85,28 +95,43 @@ export default {
     }
   },
 
-  // created() {
-  //   let url = window.location.origin + '/api/fake/me'
-  //   this.apiGetHello(url)
-  // },
+  created() {
+    let url = window.location.origin + '/api/fake/me'
+    this.apiGetHello(url)
+  },
 
   computed: {
     projects() {
       return this.apiData.projects;
     },
+    milestones() {
+      if (typeof this.selectedProject === "string") {
+        return this.apiData.milestones.filter(task => task.projectId === this.selectedProject)
+      } 
+
+      return [];
+    },
+    notes() {
+      if (this.selectedProject === false) {
+        return this.apiData.notes.filter(task => task.projectId === this.apiData.id)
+      } else if (typeof this.selectedProject === "string") {
+        return this.apiData.notes.filter(task => task.projectId === this.selectedProject)
+      } 
+
+      return []
+    },
     todos() {
       let filteredProjects = []    
       
       if (this.selectedProject === false) {
-        filteredProjects = this.apiData.tasks.filter((task) => task.projectId === this.apiData.id)
+        filteredProjects = this.apiData.tasks.filter(task => task.projectId === this.apiData.id)
       } else if (typeof this.selectedProject === "string") {
-        filteredProjects = this.apiData.tasks.filter((task) => task.projectId === this.selectedProject)
+        filteredProjects = this.apiData.tasks.filter(task => task.projectId === this.selectedProject)
       } else {
         filteredProjects = this.apiData.tasks;
       }
 
       let d = new Date();
-      // let today = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
       let tomorow = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime();
       let day2 = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 2).getTime();
 
@@ -115,41 +140,20 @@ export default {
       
       switch(this.selectedDate) {
         case 0:
-          filteredProjects = filteredProjects.filter((task) => task.date <= tomorow)
+          filteredProjects = filteredProjects.filter(task => task.date <= tomorow)
           break;
         case 1:
-          filteredProjects = filteredProjects.filter((task) => task.date >= tomorow && task.date <= day2)
+          filteredProjects = filteredProjects.filter(task => task.date >= tomorow && task.date <= day2)
           break;
         case 2:
-          filteredProjects = filteredProjects.filter((task) => task.isWeekly && task.date <= nextMonday)
+          filteredProjects = filteredProjects.filter(task => task.isWeekly && task.date <= nextMonday)
           break;
         case 3:
-          filteredProjects = filteredProjects.filter((task) => task.date == undefined)
+          filteredProjects = filteredProjects.filter(task => task.date == undefined)
           break;
       }
 
-
       return filteredProjects
-    },
-    tomorow() {
-      var d = new Date();
-      d.setDate(d.getDate() + 1);
-      var tomorow = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      return tomorow
-
-    },
-    sunday() {
-      var d = new Date();
-
-      // set to prev Monday
-      d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 7);
-
-      // set to next Monday
-      d.setDate(d.getDate() + 7);
-
-      // create new date of day before
-      var sunday = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      return sunday.getTime();
     },
   },
 };
