@@ -25,6 +25,7 @@
     </v-app-bar>
 
     <v-main>
+      <Breadcrumbs />
       <router-view />
     </v-main>
   </v-app>
@@ -33,12 +34,14 @@
 <script>
 import fetchedData from '../../backend/services/data.json'
 import Drawer from './components/drawer/Drawer.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 export default {
   name: "App",
 
   components: {
-    Drawer
+    Drawer,
+    Breadcrumbs
   },
 
   data: () => ({
@@ -68,6 +71,19 @@ export default {
   computed: {
     projects() {
       return this.apiData.projects
+    },
+    sunday() {
+      var d = new Date();
+
+      // set to Monday of this week
+      d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+
+      // set to next Monday
+      d.setDate(d.getDate() + 7);
+
+      // create new date of day before
+      var sunday = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      return sunday.getTime()
     }
   }
 };
