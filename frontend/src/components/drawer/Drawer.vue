@@ -31,21 +31,21 @@
       v-model="projectGroup"
       active-class="deep-purple--text text--accent-4"
     >
-      <v-list-item>
+      <v-list-item @mouseup="selectedProject=false">
         <v-list-item-title>Без категории</v-list-item-title>
       </v-list-item>
 
       <div v-for="{ id, name, projects } in projects" :key="id">
-        <v-list-item link v-if="projects.length === 0">
+        <v-list-item link v-if="projects.length === 0" @mouseup="selectedProject=id">
           <v-list-item-title>{{ name }}</v-list-item-title>
         </v-list-item>
 
-        <v-list-group no-action v-else>
+        <v-list-group no-action v-else @mouseup="selectedProject=id">
           <template v-slot:activator>
-            <v-list-item-title>{{ name }}</v-list-item-title>
+            <v-list-item-title>{{ name }}</v-list-item-title >
           </template>
 
-          <v-list-item v-for="{ id, name } in projects" :key="id">
+          <v-list-item v-for="{ id, name } in projects" :key="id" @mouseup="selectedProject=id">
             <v-list-item-title>{{ name }}</v-list-item-title>
           </v-list-item>
         </v-list-group>
@@ -69,8 +69,20 @@ export default {
   },
 
   data: () => ({
-    timeGroup: 0,
-    projectGroup: 0,
+    timeGroup: null,
+    projectGroup: null,
+    selectedProject: null
   }),
+
+  watch:{
+    projectGroup: function (val) {
+      if (val == undefined)  {
+        this.$emit('selectedProject', null)
+      }
+      else {
+        this.$emit('selectedProject', this.selectedProject)
+      }
+    },
+  }
 };
 </script>
