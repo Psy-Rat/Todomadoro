@@ -13,6 +13,8 @@ app.register_blueprint(main_view)
 # Возвращаем статику по руту
 ########
 PATH_STATIC = './static'
+MAIN_PAGE = "index.html"
+
 @app.route('/<path:path>')
 def sendStatic(path):
     pth = os.path.abspath(os.path.join(app.root_path, PATH_STATIC, path))
@@ -21,7 +23,8 @@ def sendStatic(path):
 
 @app.route('/')
 def index():
-    return redirect('index.html')
+    pth = os.path.abspath(os.path.join(app.root_path, PATH_STATIC))
+    return send_from_directory(pth, MAIN_PAGE)
 
 
 if __name__ == "__main__":
