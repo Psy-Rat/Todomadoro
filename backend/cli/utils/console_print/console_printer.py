@@ -1,3 +1,9 @@
+from colorama import init
+
+# Для использования в Win32 cmd
+init()
+
+
 class CLIMsg():
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

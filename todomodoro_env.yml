@@ -8,4 +8,5 @@ dependencies:
   - flask-sqlalchemy
   - flask-migrate
   - psycopg2
+  - colorama
 prefix: D:\Workspace\PythonGeneral\Anaconda\envs\Todomodoro
