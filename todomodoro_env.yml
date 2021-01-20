@@ -5,4 +5,7 @@ channels:
 dependencies:
   - python=3.7
   - flask
+  - flask-sqlalchemy
+  - flask-migrate
+  - psycopg2
 prefix: D:\Workspace\PythonGeneral\Anaconda\envs\Todomodoro
