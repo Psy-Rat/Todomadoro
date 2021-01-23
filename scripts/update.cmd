@@ -1,1 +1,1 @@
-git checkout main && git fetch upstream && git push origin main && git checkout frontend && git rebase upstream/main
+git checkout main && git fetch upstream && git push origin main && git checkout frontend && git rebase upstream/dev
