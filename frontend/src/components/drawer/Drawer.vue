@@ -31,21 +31,29 @@
       v-model="projectGroup"
       active-class="deep-purple--text text--accent-4"
     >
-      <v-list-item @mouseup="selectedProject=false">
+      <v-list-item @mouseup="selectedProject = false">
         <v-list-item-title>Без категории</v-list-item-title>
       </v-list-item>
 
       <div v-for="{ id, name, projects } in projects" :key="id">
-        <v-list-item link v-if="projects.length === 0" @mouseup="selectedProject=id">
+        <v-list-item
+          link
+          v-if="projects.length === 0"
+          @mouseup="selectedProject = id"
+        >
           <v-list-item-title>{{ name }}</v-list-item-title>
         </v-list-item>
 
-        <v-list-group no-action v-else @mouseup="selectedProject=id">
+        <v-list-group no-action v-else @mouseup="selectedProject = id">
           <template v-slot:activator>
-            <v-list-item-title>{{ name }}</v-list-item-title >
+            <v-list-item-title>{{ name }}</v-list-item-title>
           </template>
 
-          <v-list-item v-for="{ id, name } in projects" :key="id" @mouseup="selectedProject=id">
+          <v-list-item
+            v-for="{ id, name } in projects"
+            :key="id"
+            @mouseup="selectedProject = id"
+          >
             <v-list-item-title>{{ name }}</v-list-item-title>
           </v-list-item>
         </v-list-group>
@@ -55,42 +63,47 @@
 </template>
 
 <script>
-import Avatar from "./Avatar.vue";
+import Avatar from './Avatar.vue'
 export default {
   components: {
-    Avatar,
+    Avatar
   },
 
   props: {
-    projects: {
-      type: Array,
-      required: true,
-    },
+    projectsProp: {
+      type: Array
+    }
   },
 
-  data: () => ({
-    timeGroup: null,
-    projectGroup: null,
-    selectedProject: null
-  }),
+  data() {
+    return {
+      timeGroup: null,
+      projectGroup: null,
+      selectedProject: null
+    }
+  },
 
-  watch:{
-    projectGroup: function (val) {
-      if (val == undefined)  {
+  computed: {
+    projects() {
+      return this.projectsProp || []
+    }
+  },
+
+  watch: {
+    projectGroup: function(val) {
+      if (val == undefined) {
         this.$emit('selectedProject', null)
-      }
-      else {
+      } else {
         this.$emit('selectedProject', this.selectedProject)
       }
     },
-    timeGroup: function (val) {
-      if (val == undefined)  {
+    timeGroup: function(val) {
+      if (val == undefined) {
         this.$emit('selectedTimeGroup', null)
-      }
-      else {
+      } else {
         this.$emit('selectedTimeGroup', this.timeGroup)
       }
-    },
+    }
   }
-};
+}
 </script>
