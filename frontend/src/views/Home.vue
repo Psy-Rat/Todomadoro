@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-navigation-drawer app v-model="drawer" temporary>
-      <Drawer
-        :projectsProp="projects"
-        @selectedProject="setSelectedProject"
-        @selectedTimeGroup="setTimeGroup"
-      />
+      <Drawer />
     </v-navigation-drawer>
 
     <v-app-bar app color="primary" dark>
@@ -45,16 +41,18 @@
               typeof selectedProject === 'boolean'
           "
         >
-          <NoteList :notes="notes" />
+          <!-- <NoteList :notes="notes" /> -->
         </v-tab-item>
         <v-tab-item v-if="typeof selectedProject === 'string'">
-          <MilestoneList :milestones="milestones" />
+          <!-- <MilestoneList :milestones="milestones" /> -->
         </v-tab-item>
         <v-tab-item v-if="typeof selectedProject === 'string'">
           Отчеты (пока не готово)
         </v-tab-item>
       </v-tabs-items>
     </v-main>
+
+    <TodoDialog />
 
     <v-overlay :opacity="0.9" :value="overlay">
       <v-btn color="orange lighten-2" @click="overlay = false">
@@ -67,8 +65,9 @@
 <script>
 import Drawer from '@/components/drawer/Drawer.vue'
 import TodoList from '@/components/TodoList.vue'
-import MilestoneList from '@/components/tabs/MilestonesList.vue'
-import NoteList from '@/components/tabs/NoteList.vue'
+// import MilestoneList from '@/components/tabs/MilestonesList.vue'
+// import NoteList from '@/components/tabs/NoteList.vue'
+import TodoDialog from '@/components/TodoDialog'
 
 export default {
   name: 'Home',
@@ -76,136 +75,60 @@ export default {
   components: {
     Drawer,
     TodoList,
-    MilestoneList,
-    NoteList
+    // MilestoneList,
+    // NoteList,
+    TodoDialog
   },
 
   data: () => ({
     drawer: false,
-    timeGroup: 0,
-    projectGroup: 0,
     tab: 0,
-    apiData: {},
-
-    selectedProject: null,
-    selectedDate: null,
-
     overlay: false
   }),
 
-  methods: {
-    setSelectedProject(projectId) {
-      if (this.tab > 1) {
-        this.tab = 0
-      }
-
-      this.selectedProject = projectId
-    },
-    setTimeGroup(timeGroup) {
-      this.selectedDate = timeGroup
-    }
-  },
-
   created() {
-    /**
-     * Эта хуйня нужна только для адекватной разработки фронта с liveReload'ом
-     * просто импортирую json-чик на dev моде
-     */
-    if (process.env.NODE_ENV === 'production') {
-      this.$api.getFakeInitData({ args: { userId: 'me' } }).then(data => {
-        this.apiData = data
-      })
-    } else {
-      import('../../../backend/services/data.json').then(apiData => {
-        this.apiData = apiData
-      })
-    }
+    this.$store.dispatch('App/init')
   },
 
   computed: {
     projects() {
-      return this.apiData.projects || []
+      return this.$store.getters['App/projects']
     },
-    milestones() {
-      if (typeof this.selectedProject === 'string') {
-        return this.apiData.milestones.filter(
-          task => task.projectId === this.selectedProject
-        )
-      }
+    selectedProject() {
+      return this.$store.getters['App/selectedProjectGroup']
+    },
+    // milestones() {
+    //   if (typeof this.selectedProject === 'string') {
+    //     return this.apiData.milestones.filter(
+    //       task => task.projectId === this.selectedProject
+    //     )
+    //   }
 
-      return []
-    },
-    notes() {
-      if (this.selectedProject === false) {
-        return this.apiData.notes.filter(
-          task => task.projectId === this.apiData.id
-        )
-      } else if (typeof this.selectedProject === 'string') {
-        return this.apiData.notes.filter(
-          task => task.projectId === this.selectedProject
-        )
-      }
+    //   return []
+    // },
+    // notes() {
+    //   if (this.selectedProject === false) {
+    //     return this.apiData.notes.filter(
+    //       task => task.projectId === this.apiData.id
+    //     )
+    //   } else if (typeof this.selectedProject === 'string') {
+    //     return this.apiData.notes.filter(
+    //       task => task.projectId === this.selectedProject
+    //     )
+    //   }
 
-      return []
-    },
+    //   return []
+    // },
     todos() {
-      let filteredProjects = []
+      return this.$store.getters['App/tasks']
+    }
+  },
 
-      if (this.selectedProject === false) {
-        filteredProjects = this.apiData.tasks.filter(
-          task => task.projectId === this.apiData.id
-        )
-      } else if (typeof this.selectedProject === 'string') {
-        filteredProjects = this.apiData.tasks.filter(
-          task => task.projectId === this.selectedProject
-        )
-      } else {
-        filteredProjects = this.apiData.tasks
+  watch: {
+    selectedProject() {
+      if (this.tab > 1) {
+        this.tab = 0
       }
-
-      let d = new Date()
-      let tomorow = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 1
-      ).getTime()
-      let day2 = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 2
-      ).getTime()
-
-      d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
-      let nextMonday = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 7
-      ).getTime()
-
-      switch (this.selectedDate) {
-        case 0:
-          filteredProjects = filteredProjects.filter(
-            task => task.date <= tomorow
-          )
-          break
-        case 1:
-          filteredProjects = filteredProjects.filter(
-            task => task.date >= tomorow && task.date <= day2
-          )
-          break
-        case 2:
-          filteredProjects = filteredProjects.filter(
-            task => task.isWeekly && task.date <= nextMonday
-          )
-          break
-        case 3:
-          filteredProjects = filteredProjects.filter(
-            task => task.date == undefined
-          )
-          break
-      }
-
-      return filteredProjects
     }
   }
 }

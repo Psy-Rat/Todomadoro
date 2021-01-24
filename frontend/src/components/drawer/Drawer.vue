@@ -69,12 +69,6 @@ export default {
     Avatar
   },
 
-  props: {
-    projectsProp: {
-      type: Array
-    }
-  },
-
   data() {
     return {
       timeGroup: null,
@@ -85,23 +79,23 @@ export default {
 
   computed: {
     projects() {
-      return this.projectsProp || []
+      return this.$store.getters['App/projects']
     }
   },
 
   watch: {
     projectGroup: function(val) {
       if (val == undefined) {
-        this.$emit('selectedProject', null)
+        this.$store.commit('App/setProjectGroup', null)
       } else {
-        this.$emit('selectedProject', this.selectedProject)
+        this.$store.commit('App/setProjectGroup', this.selectedProject)
       }
     },
     timeGroup: function(val) {
       if (val == undefined) {
-        this.$emit('selectedTimeGroup', null)
+        this.$store.commit('App/setTimeGroup', null)
       } else {
-        this.$emit('selectedTimeGroup', this.timeGroup)
+        this.$store.commit('App/setTimeGroup', this.timeGroup)
       }
     }
   }
