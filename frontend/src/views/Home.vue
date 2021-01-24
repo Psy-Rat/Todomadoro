@@ -2,7 +2,7 @@
   <div>
     <v-navigation-drawer app v-model="drawer" temporary>
       <Drawer
-        :projects="projects"
+        :projectsProp="projects"
         @selectedProject="setSelectedProject"
         @selectedTimeGroup="setTimeGroup"
       />
@@ -37,7 +37,7 @@
 
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <TodoList :todos="todos" />
+          <TodoList :todosProp="todos" />
         </v-tab-item>
         <v-tab-item
           v-if="
@@ -69,7 +69,6 @@ import Drawer from '@/components/drawer/Drawer.vue'
 import TodoList from '@/components/TodoList.vue'
 import MilestoneList from '@/components/tabs/MilestonesList.vue'
 import NoteList from '@/components/tabs/NoteList.vue'
-import api from '../services/api/apiClient'
 
 export default {
   name: 'Home',
@@ -113,7 +112,7 @@ export default {
      * просто импортирую json-чик на dev моде
      */
     if (process.env.NODE_ENV === 'production') {
-      api.getFakeInitData({ args: { userId: 'me' } }).then(data => {
+      this.$api.getFakeInitData({ args: { userId: 'me' } }).then(data => {
         this.apiData = data
       })
     } else {
@@ -125,7 +124,7 @@ export default {
 
   computed: {
     projects() {
-      return this.apiData.projects
+      return this.apiData.projects || []
     },
     milestones() {
       if (typeof this.selectedProject === 'string') {
