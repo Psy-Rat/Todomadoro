@@ -1,3 +1,4 @@
+import * as dateHelper from '../../services/dateHelper'
 export default {
   namespaced: true,
   state: {
@@ -13,8 +14,8 @@ export default {
     milestones: [],
     notes: [],
 
-    selectedTimeGroup: '',
-    selectedProjectGroup: '',
+    selectedDayCategory: null,
+    selectedProjectId: null
   },
   getters: {
     count: state => state.count,
@@ -25,66 +26,25 @@ export default {
 
     dialogData: state => state.dialogData,
     projects: state => state.projects,
+    rootProjectId: state => state.projects.id,
     tasks(state) {
       let filteredProjects = []
 
-      if (state.selectedProjectGroup === false) {
+      if (typeof state.selectedProjectId === 'string') {
         filteredProjects = state.tasks.filter(
-          task => task.projectId === state.projects.id
-        )
-      } else if (typeof state.selectedProjectGroup === 'string') {
-        filteredProjects = state.tasks.filter(
-          task => task.projectId === state.selectedProjectGroup
+          task => task.projectId === state.selectedProjectId
         )
       } else {
         filteredProjects = state.tasks
       }
 
-      let d = new Date()
-      let tomorow = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 1
-      ).getTime()
-      let day2 = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 2
-      ).getTime()
-
-      d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
-      let nextMonday = new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate() + 7
-      ).getTime()
-
-      switch (state.selectedTimeGroup) {
-        case 0:
-          filteredProjects = filteredProjects.filter(
-            task => task.date <= tomorow
-          )
-          break
-        case 1:
-          filteredProjects = filteredProjects.filter(
-            task => task.date >= tomorow && task.date <= day2
-          )
-          break
-        case 2:
-          filteredProjects = filteredProjects.filter(
-            task => task.isWeekly && task.date <= nextMonday
-          )
-          break
-        case 3:
-          filteredProjects = filteredProjects.filter(
-            task => task.date == undefined
-          )
-          break
-      }
+      filteredProjects = filteredProjects.filter(task =>
+        dateHelper.filterByCategory(state.selectedDayCategory, task.date)
+      )
 
       return filteredProjects
     },
-    selectedProjectGroup: state => state.selectedProjectGroup
+    selectedProjectId: state => state.selectedProjectId
   },
   mutations: {
     increment(state) {
@@ -99,11 +59,11 @@ export default {
     setTasks(state, tasks) {
       state.tasks = tasks
     },
-    setProjectGroup(state, selectedProjectGroup) {
-      state.selectedProjectGroup = selectedProjectGroup
+    setSelectedProjectId(state, selectedProjectId) {
+      state.selectedProjectId = selectedProjectId
     },
-    setTimeGroup(state, selectedTimeGroup) {
-      state.selectedTimeGroup = selectedTimeGroup
+    setSelectedDateCategory(state, selectedDayCategory) {
+      state.selectedDayCategory = selectedDayCategory
     }
   },
   actions: {

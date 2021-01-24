@@ -5,33 +5,25 @@
     <v-divider></v-divider>
 
     <v-list-item-group
-      v-model="timeGroup"
+      v-model="dateIndex"
       active-class="deep-purple--text text--accent-4"
     >
-      <v-list-item>
-        <v-list-item-title>Сегодня</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>Завтра</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>На неделе</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>Когда-нибудь</v-list-item-title>
+      <v-list-item
+        v-for="(dg, i) in dateGroups"
+        :key="i"
+        @mouseup="selectedDateCategory = dg"
+      >
+        <v-list-item-title>{{ dg }}</v-list-item-title>
       </v-list-item>
     </v-list-item-group>
 
     <v-divider></v-divider>
 
     <v-list-item-group
-      v-model="projectGroup"
+      v-model="projectIndex"
       active-class="deep-purple--text text--accent-4"
     >
-      <v-list-item @mouseup="selectedProject = false">
+      <v-list-item @mouseup="selectedProjectId = false">
         <v-list-item-title>Без категории</v-list-item-title>
       </v-list-item>
 
@@ -39,12 +31,12 @@
         <v-list-item
           link
           v-if="projects.length === 0"
-          @mouseup="selectedProject = id"
+          @mouseup="selectedProjectId = id"
         >
           <v-list-item-title>{{ name }}</v-list-item-title>
         </v-list-item>
 
-        <v-list-group no-action v-else @mouseup="selectedProject = id">
+        <v-list-group no-action v-else @mouseup="selectedProjectId = id">
           <template v-slot:activator>
             <v-list-item-title>{{ name }}</v-list-item-title>
           </template>
@@ -52,7 +44,7 @@
           <v-list-item
             v-for="{ id, name } in projects"
             :key="id"
-            @mouseup="selectedProject = id"
+            @mouseup="selectedProjectId = id"
           >
             <v-list-item-title>{{ name }}</v-list-item-title>
           </v-list-item>
@@ -64,6 +56,8 @@
 
 <script>
 import Avatar from './Avatar.vue'
+import * as dateHelper from '../../services/dateHelper'
+
 export default {
   components: {
     Avatar
@@ -71,9 +65,13 @@ export default {
 
   data() {
     return {
-      timeGroup: null,
-      projectGroup: null,
-      selectedProject: null
+      dateIndex: null,
+      projectIndex: null,
+
+      selectedProjectId: null,
+      selectedDateCategory: null,
+
+      dateGroups: dateHelper.DAY_CATEGORIES
     }
   },
 
@@ -84,18 +82,21 @@ export default {
   },
 
   watch: {
-    projectGroup: function(val) {
+    projectIndex: function(val) {
       if (val == undefined) {
-        this.$store.commit('App/setProjectGroup', null)
+        this.$store.commit('App/setSelectedProjectId', null)
       } else {
-        this.$store.commit('App/setProjectGroup', this.selectedProject)
+        this.$store.commit('App/setSelectedProjectId', this.selectedProjectId)
       }
     },
-    timeGroup: function(val) {
+    dateIndex: function(val) {
       if (val == undefined) {
-        this.$store.commit('App/setTimeGroup', null)
+        this.$store.commit('App/setSelectedDateCategory', null)
       } else {
-        this.$store.commit('App/setTimeGroup', this.timeGroup)
+        this.$store.commit(
+          'App/setSelectedDateCategory',
+          this.selectedDateCategory
+        )
       }
     }
   }

@@ -4,7 +4,7 @@
     <div
       @click="$store.commit('App/setDialog', { date, description, projectId })"
     >
-      {{ description }}
+      {{ description }} {{ date }}
     </div>
   </v-list-item>
 </template>

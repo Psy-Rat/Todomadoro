@@ -95,7 +95,7 @@ export default {
       return this.$store.getters['App/projects']
     },
     selectedProject() {
-      return this.$store.getters['App/selectedProjectGroup']
+      return this.$store.getters['App/selectedProjectId']
     },
     // milestones() {
     //   if (typeof this.selectedProject === 'string') {

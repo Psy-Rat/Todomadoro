@@ -40,14 +40,14 @@
             "projectId": "root",
             "description": "test global task 3",
             "completed": false,
-            "date": "2021-01-21"
+            "date": 1613854800000
         },
         {
             "id": "g45",
             "projectId": "root",
             "description": "test global task 4",
             "completed": true,
-            "date": "2021-01-24",
+            "date": 1611435600000,
             "isWeekly": true
         },
         {
@@ -55,7 +55,7 @@
             "projectId": "qwe123",
             "description": "test task 1",
             "completed": false,
-            "date": "2021-01-23"
+            "date": 1614027600000
         },
         {
             "id": "456",
@@ -68,7 +68,7 @@
             "projectId": "qwe123",
             "description": "test task 5",
             "completed": true,
-            "date": "2021-01-27"
+            "date": 1611522000000
         }
     ],
     "notes": [
