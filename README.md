@@ -8,8 +8,8 @@
 3. Окружение Todomodoro должно отобразиться в списке доступных
 > conda env list
 4. > conda activate Todomodoro
-5. > python app.py
-
+5. > python app.py [env]
+env - указывает какое окружение использовать: test, dev, prod
 
 ### Frontend
 1. Установить [node.js](https://nodejs.org/)
@@ -21,3 +21,11 @@
 Подождать установку пакетов
 4. Собрать фронтенд
 > yarn build
+
+
+## Управление пакетами
+обновление бека
+> conda env update --file todomodoro_env.yml
+
+обновление фронта
+> cd frontend && yarn

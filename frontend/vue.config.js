@@ -1,20 +1,20 @@
 module.exports = {
   outputDir: '../static',
-  
+
   pwa: {
-    name: 'todomodoro-pwa-frontend',
-    shortName: 'todomodoro',
-    themeColor: '#4DBA87',
+    name: 'Todomodoro',
+    shortName: 'Todomodoro',
+    themeColor: '#1976d2',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
 
     // настройки манифеста
     manifestOptions: {
-      name: 'todomodoro-pwa-frontend',
-      short_name: 'todomodoro',
+      name: 'todomodoro',
+      short_name: 'Todomodoro',
       display: 'standalone',
-      background_color: '#42B883',
+      background_color: '#1976d2'
       // ...другие настройки манифеста...
     },
 

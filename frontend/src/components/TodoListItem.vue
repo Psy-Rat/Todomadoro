@@ -1,69 +1,58 @@
 <template>
   <v-list-item>
-    <v-card outlined min-width="100%" class="mb-2">
-      <v-card-title>{{ todo.desription }}</v-card-title>
-      <v-card-actions>
-        <v-btn @click="$emit('remove', todo.id)">X</v-btn>
-        <v-btn @click="dialog = true">E</v-btn>
-      </v-card-actions>
-    </v-card>
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-title>Задача</v-card-title>
-
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Задача *" required></v-text-field>
-              </v-col>
-  
-              <v-col cols="12" sm="6">
-                <v-select
-                  label="Дата *"
-                  :items="['Сегодня', 'Завтра', 'На неделе', 'Когда-нибудь', 'Установить дату']"
-                  v-model="value"
-                  required
-                ></v-select>
-              </v-col>
-
-              <v-col cols="12" sm="6">
-                <v-select
-                  label="Проект *"
-                  :items="['Проект 1', 'Проект 2']"
-                  required
-                ></v-select>
-              </v-col>
-              
-            </v-row>
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">
-            Close
-          </v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-checkbox v-model="completed"></v-checkbox>
+    <div
+      @click="$store.commit('App/setDialog', { date, description, projectId })"
+    >
+      {{ description }} {{ date }}
+    </div>
   </v-list-item>
 </template>
 
 <script>
+import * as dateHelper from '../services/dateHelper.js'
+
 export default {
   props: {
-    todo: {
-      type: Object,
-      required: true,
-    },
+    todoProp: {
+      completed: Boolean,
+      date: String,
+      description: String,
+      id: String,
+      projectId: String
+    }
   },
 
-  data: () => ({
-    dialog: false,
-  }),
-};
+  data() {
+    return {
+      SETUP_DAY:
+        dateHelper.SETUP_CATEGORIES[dateHelper.SETUP_CATEGORIES.length - 1],
+      dates: dateHelper.SETUP_CATEGORIES,
+      projects: ['Проект 1', 'Проект 2'],
+      dialog: false,
+      description: this.todoProp.description || '',
+      completed: this.todoProp.completed || false,
+      date: this.todoProp.date || null,
+      projectId: this.todoProp.projectId || '',
+
+      testDate: dateHelper.SETUP_CATEGORIES[0],
+      testProj: 'Проект 1'
+    }
+  },
+  methods: {
+    dateToDatesArray() {
+      // this.date
+      // let dates = date()
+      // return today
+    }
+  },
+
+  watch: {
+    testDate(val) {
+      if (dateHelper.dayCategoryToDate(val) !== null) {
+        this.date = dateHelper.dayCategoryToDate(val)
+      }
+    }
+  }
+}
 </script>

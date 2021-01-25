@@ -1,24 +1,29 @@
-# todomodoro-pwa-frontend
+# frontend
 
-## Project setup
-```
-yarn install
-```
+Короче,  Psy-Rat, я запилил фронтэнд и в благородство играть не буду: выполнишь для меня пару эндпоинтов – и мы в расчете. Заодно посмотрим, как быстро у тебя башка после computer vision прояснится. А по твоей теме постараюсь разузнать. Хрен его знает, на кой ляд тебе этот flask сдался, но я в чужие дела не лезу, хочешь свитч в web, значит есть за что…
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Команды CLI
+Мы тут Yarn'ои балуемся, так-то запоминай
 
-### Compiles and minifies for production
 ```
-yarn build
+yarn install - Project setup
+yarn build // Compiles and minifies for production
+yarn serve // Compiles and hot-reloads for development
+yarn lint // Lints and fixes files
 ```
 
-### Lints and fixes files
+## Структура фронта
 ```
-yarn lint
++-- package.json - Список зависимостей проекта. Тут еще файлы конфигурации есть, но они не такие интересные
++-- public - всякая статика, которая нужна для сайта
++-- src - исходнички
+|  +-- assets - статика, которую используют компоненты
+|  +-- components- компоненты приложения
+|  +-- serices - Сервисы. Обычные js файлы с функциональностью, которая может понадобиться в разных компонентах
+|  +-- views - все страницы, по которым может гулять router
+|  +-- App.vue - приложение. Тупо подключает router
+|  +-- main.js - точка входа, подключает всю шалупонь
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Хочешь поконфигурировать?
+Читай доки - [Configuration Reference](https://cli.vuejs.org/config/).
