@@ -1,4 +1,6 @@
-import * as dateHelper from '../../services/dateHelper'
+import * as dateHelper from '@/services/dateHelper'
+import $api from '@/services/api/apiClient'
+
 export default {
   namespaced: true,
   state: {
@@ -74,7 +76,7 @@ export default {
     init(context) {
       let dataFetcher
       if (process.env.NODE_ENV === 'production') {
-        dataFetcher = this.$api.getFakeInitData({ args: { userId: 'me' } })
+        dataFetcher = $api.getFakeInitData({ args: { userId: 'me' } })
       } else {
         dataFetcher = import('../../../../backend/services/data.json')
       }
